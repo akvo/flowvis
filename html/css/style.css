@@ -1,0 +1,31 @@
+/* Put your CSS here */
+.ember-application {
+    margin: 20px;
+}
+
+html, body {
+    background-color: white;
+}
+
+#map {
+    height: 768px;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+}
+
+#filter {
+    display: block;
+    float: none;
+    width: 250px;
+    border: 1px solid black;
+    background-color: white;
+    top: 80px;
+    position: absolute;
+    right: 10px;
+}
+
+#map1 {
+    height: 400px;
+    width: 600px;
+}
