@@ -59,12 +59,3 @@ Copyright (c) 2014 TernUp LLP
  TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
-Creative License
-============
-Art work has been obtained from http://openclipart.org/. Please refer http://openclipart.org/share for licensing information.
-
-## List of art work from openclipart
-* [well](http://openclipart.org/detail/11556/-by--11556)
-* [handpump](http://openclipart.org/detail/4664/pumpwell-by-piotriq)
-
