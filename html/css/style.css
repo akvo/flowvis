@@ -4,11 +4,11 @@
 }
 
 html, body {
-    background-color: white;
+    background-color: black;
 }
 
 #map {
-    height: 768px;
+    height: 600px;
     width: 100%;
     padding: 0px;
     margin: 0px;
@@ -17,15 +17,29 @@ html, body {
 #filter {
     display: block;
     float: none;
-    width: 250px;
+    width: 350px;
     border: 1px solid black;
     background-color: white;
     top: 80px;
     position: absolute;
     right: 10px;
+    z-index: 9999;
 }
 
 #map1 {
     height: 400px;
     width: 600px;
+}
+
+.window-bar {
+    background-color: black;
+}
+.window-title {
+    padding-left: 20px;
+    font-size: large;
+    color: white;
+}
+
+.window-close {
+    padding-right: 20px;
 }

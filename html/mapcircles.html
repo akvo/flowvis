@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Akvo FLOW</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
+
+<style>
+#map {
+    width: 100%;
+    height: 600px;
+}
+</style>
+
+</head>
+<body>
+  <script type="text/x-handlebars" data-template-name="index">
+    <div id="map">
+    </div>
+  </script>
+
+  <script src="js/libs/jquery-1.10.2.js"></script>
+  <script src="js/libs/d3.js"></script>
+  <script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+  <script src="js/libs/handlebars-1.1.2.js"></script>
+  <script src="js/libs/ember-1.4.0.js"></script>
+  <script src="js/libs/ember-data-1.0.0.js"></script>
+  <script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+  <script src="js/libs/ember-leaflet.js"></script>
+  <script src="js/libs/coffee-script.js"></script>
+<script type="text/coffeescript">
+points =
+    objects: [
+        {
+        type: "Point"
+        coordinates: [13.121, 77.624]
+        },{
+        type: "Point"
+        coordinates: [13.1155, 77.7701]
+        },{
+        type: "Point"
+        coordinates: [13.01311, 76.893223]
+        },{
+        type: "Point"
+        coordinates: [12.917945, 77.672775]
+        }
+    ]
+
+App = Ember.Application.create()
+
+App.IndexView = EmberLeaflet.MapView.extend
+    center: L.latLng 13, 77.78
+    zoom: 10
+    didInsertElement: () ->
+        update = () ->
+            feature.attr "transform", (d) ->
+                "translate(#{map.latLngToLayerPoint(d.LatLng).x}, 
+                    #{map.latLngToLayerPoint(d.LatLng).y})"
+        @_super()
+        map = @_layer
+        svg = d3.select(map.getPanes().overlayPane).append "svg"
+            .attr "width", map.getSize().x
+            .attr "height", map.getSize().y
+        
+        points.objects.forEach (d) ->
+            d.LatLng = new L.latLng(d.coordinates[0], d.coordinates[1])
+
+        g = svg.append("g").attr "class", "leaflet-zoom-hide"
+        feature = g.selectAll "circle"
+            .data points.objects
+            .enter().append "circle"
+                .style "stroke", "black"
+                .style "opacity", 0.6
+                .style "fill", "red"
+                .attr "r", 5
+
+        map.on "viewreset", update
+        update()
+    
+</script>
+</body>
+</html>

@@ -467,8 +467,9 @@ EmberLeaflet.MapView = Ember.View.extend(EmberLeaflet.ContainerLayerMixin, {
       this.get('zoom'), !!this.get('zoom'));
     this.willCreateLayer();
     this.propertyWillChange('layer');
-    this._layer = L.map(this.get('elementId'), this.get('options'));
-    this._layer.setView(this.get('center'), this.get('zoom'));
+    this._layer = L.map(this.get('elementId'), this.get('options'))
+        .setView(this.get('center'), this.get('zoom'));
+    //this._layer.setView(this.get('center'), this.get('zoom'));
     this._addEventListeners();
     this.propertyDidChange('layer');
     this.didCreateLayer();

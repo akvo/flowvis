@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>D3 Maps</title>
+<link 
+        rel="stylesheet" 
+        href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"
+    />
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+</head>
+<body>
+<script type="text/x-handlebars" data-template-name="index">
+</script>
+
+<div id="map" style="width: 100%; height: 600px"></div>
+<script src="js/libs/jquery-1.10.2.js"></script>
+<script src="js/libs/handlebars-1.1.2.js"></script>
+<script src="js/libs/ember-1.4.0.js"></script>
+<script src="js/libs/ember-data-1.0.0.js"></script>
+<script src="js/libs/coffee-script.js"></script>
+<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+<script src="js/libs/d3.v3.js" charset="utf-8"></script>
+<script type="text/coffeescript">
+map = L.map 'map'
+    .setView [10.2, -9.1], 6
+L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution: '&copy;OSM'
+    maxZoom: 18
+).addTo(map)
+
+svg = d3.select(map.getPanes().overlayPane).append "svg"
+g = svg.append "g"
+    .attr "class", "leaflet-zoom-hide"
+
+projectPoint = (x, y) ->
+    point = map.latLngToLayerPoint(new L.LatLng(y, x))
+    @stream.point point.x, point.y
+    null
+
+d3.json "rectangle.json", (geoShape) ->
+    reset = () ->
+        bounds = path.bounds geoShape
+        topLeft = bounds[0]
+        bottomRight = bounds[1]
+        console.log bounds
+
+        svg.attr "width", bottomRight[0] - topLeft[0]
+            .attr "height", bottomRight[1] - topLeft[1]
+            .style "left", topLeft[0] + "px"
+            .style "top", topLeft[1] + "px"
+        g.attr "transform", "translate(#{-topLeft[0]},#{-topLeft[1]})"
+        features.attr "d", path
+            .style "fill-opacity", 0.8
+            .attr "fill", "blue"
+
+    transform = d3.geo.transform({point: projectPoint})
+    path = d3.geo.path().projection(transform)
+    features = g.selectAll "path"
+        .data geoShape.features
+        .enter().append "path"
+
+    map.on "viewreset", reset
+    reset()
+
+</script>
+</body>
+</html>

@@ -28,6 +28,7 @@ Useful links to help understand ember-data, leaflet and ember-leaflet.
 * [Ember Guides](http://emberjs.com/guides/)
 * [Ember Leaflet](http://gabesmed.github.io/ember-leaflet/)
 * [Git Bundles](http://stackoverflow.com/questions/3635952/how-to-use-git-bundle-for-keeping-development-in-sync)
+* [D3 Tips & Tricks](https://leanpub.com/D3-Tips-and-Tricks)
 
 For ember and ember data I found the best guide to be the [latest video tutorial for ember](http://www.youtube.com/watch?v=1QHrlFlaXdI) and this [tutorial](http://coding.smashingmagazine.com/2013/11/07/an-in-depth-introduction-to-ember-js/)
 
