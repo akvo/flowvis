@@ -71,6 +71,7 @@ App.IndexView = EmberLeaflet.MapView.extend
             d.LatLng = new L.latLng(d.coordinates[0], d.coordinates[1])
 
         g = svg.append("g").attr "class", "leaflet-zoom-hide"
+        console.log points
         feature = g.selectAll "circle"
             .data points.objects
             .enter().append "circle"
@@ -81,7 +82,6 @@ App.IndexView = EmberLeaflet.MapView.extend
 
         map.on "viewreset", update
         update()
-    
 </script>
 </body>
 </html>

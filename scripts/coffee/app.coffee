@@ -91,7 +91,7 @@ App.IndexView = EmberLeaflet.MapView.extend
             type: "FeatureCollection"
             features: []
 
-        map =  @_layer
+        map = @_layer
         svg = d3.select(map.getPanes().overlayPane).append "svg"
         g = svg.append("g").attr "class", "leaflet-zoom-hide"
         transform = d3.geo.transform point: projectPoint
