@@ -29,6 +29,7 @@ App.IndexView = EmberLeaflet.MapView.extend
             feature?.attr "transform", (d) ->
                 "translate(#{map.latLngToLayerPoint(d.LatLng).x}, 
                     #{map.latLngToLayerPoint(d.LatLng).y})"
+
         feature = null
         @_super()
         map = @_layer
@@ -61,8 +62,11 @@ App.IndexView = EmberLeaflet.MapView.extend
                             return "green"
                         "red"
                     .attr "r", 5
+                    .attr "transform", (d) ->
+                        pt = map.latLngToLayerPoint(d.LatLng)
+                        "translate(#{pt.x},#{pt.y})"
 
         map.on "viewreset", update
-        setInterval update, 1000
+        update()
 
 window.App = App
