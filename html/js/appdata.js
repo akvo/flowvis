@@ -29,26 +29,59 @@ App.IndexView = EmberLeaflet.MapView.extend({
   center: L.latLng(6.22, -9.25),
   zoom: 9,
   didInsertElement: function() {
-    var ctrl, feature, fields, flowdata, g, map, svg, update;
+    var ctrl, feature, fields, flowdata, g, getBounds, map, projectPoint, svg, update;
+    getBounds = function(data) {
+      var brx, bry, item, pt, tlx, tly, _i, _len;
+      tlx = tly = Infinity;
+      brx = bry = -Infinity;
+      for (_i = 0, _len = data.length; _i < _len; _i++) {
+        item = data[_i];
+        pt = map.latLngToLayerPoint(item.LatLng);
+        if (pt.x > brx) {
+          brx = pt.x;
+        }
+        if (pt.y > bry) {
+          bry = pt.y;
+        }
+        if (pt.x < tlx) {
+          tlx = pt.x;
+        }
+        if (pt.y < tly) {
+          tly = pt.y;
+        }
+      }
+      return [[tlx, tly], [brx, bry]];
+    };
     update = function() {
-      return typeof feature !== "undefined" && feature !== null ? feature.attr("transform", function(d) {
-        return "translate(" + (map.latLngToLayerPoint(d.LatLng).x) + ", " + (map.latLngToLayerPoint(d.LatLng).y) + ")";
-      }) : void 0;
+      var bounds, br, tl;
+      if (typeof feature !== "undefined" && feature !== null) {
+        feature.attr("transform", function(d) {
+          return "translate(" + (map.latLngToLayerPoint(d.LatLng).x) + ", " + (map.latLngToLayerPoint(d.LatLng).y) + ")";
+        });
+      }
+      bounds = getBounds(flowdata);
+      tl = bounds[0];
+      br = bounds[1];
+      svg.attr("width", br[0] - tl[0] + 40).attr("height", br[1] - tl[1] + 40).style("left", "" + (tl[0] - 10) + "px").style("top", "" + (tl[1] - 10) + "px");
+      return g.attr("transform", "translate(" + (-tl[0] + 10) + "," + (-tl[1] + 10) + ")");
+    };
+    projectPoint = function(x, y) {
+      var pt;
+      pt = map.latLngToLayerPoint(new L.LatLng(y, x));
+      return this.stream.point(pt.x, pt.y);
     };
     feature = null;
     this._super();
     map = this._layer;
-    svg = d3.select(map.getPanes().overlayPane).append("svg").attr("width", map.getSize().x).attr("height", map.getSize().y);
+    svg = d3.select(map.getPanes().overlayPane).append("svg");
     g = svg.append("g").attr("class", "leaflet-zoom-hide");
     ctrl = this.get('controller');
-    flowdata = {
-      objects: []
-    };
+    flowdata = [];
     fields = [];
     Ember.get(App.Flowdata, 'fields').forEach(function(field) {
       return fields.push(field);
     });
-    ctrl.store.find('flowdata').then(function(data) {
+    return ctrl.store.find('flowdata').then(function(data) {
       data.forEach(function(item) {
         var d, f, _i, _len;
         d = {};
@@ -57,17 +90,21 @@ App.IndexView = EmberLeaflet.MapView.extend({
           d[f] = item.get(f);
         }
         d.LatLng = new L.LatLng(item.get('latitude'), item.get('longitude'));
-        return flowdata.objects.push(d);
+        return flowdata.push(d);
       });
-      return feature = g.selectAll("circle").data(flowdata.objects).enter().append("circle").style("stroke", "black").style("opacity", 0.6).style("fill", function(d) {
+      feature = g.selectAll("circle").data(flowdata).enter().append("circle").style("stroke", "black").style("opacity", 0.6).style("fill", function(d) {
         if (d.quality.istartswith("soft")) {
           return "green";
         }
         return "red";
-      }).attr("r", 5);
+      }).attr("r", 5).attr("transform", function(d) {
+        var pt;
+        pt = map.latLngToLayerPoint(d.LatLng);
+        return "translate(" + pt.x + "," + pt.y + ")";
+      });
+      map.on("viewreset", update);
+      return update();
     });
-    map.on("viewreset", update);
-    return setInterval(update, 1000);
   }
 });
 
